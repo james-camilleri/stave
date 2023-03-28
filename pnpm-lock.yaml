@@ -13,6 +13,7 @@ specifiers:
   postcss-html: ^1.5.0
   prettier: ^2.8.0
   prettier-plugin-svelte: ^2.8.1
+  sanitize.css: ^13.0.0
   sass: ^1.60.0
   stylelint: ^15.3.0
   stylelint-config-html: ^1.1.0
@@ -40,6 +41,7 @@ devDependencies:
   postcss-html: 1.5.0
   prettier: 2.8.7
   prettier-plugin-svelte: 2.10.0_5ir2xprf4ygk6mygilwnltaw3a
+  sanitize.css: 13.0.0
   sass: 1.60.0
   stylelint: 15.3.0
   stylelint-config-html: 1.1.0_o7z2z2yv565o3a3uaodintvte4
@@ -2461,6 +2463,10 @@ packages:
       graceful-fs: 4.2.11
       mkdirp: 0.5.6
       rimraf: 2.7.1
+    dev: true
+
+  /sanitize.css/13.0.0:
+    resolution: {integrity: sha512-ZRwKbh/eQ6w9vmTjkuG0Ioi3HBwPFce0O+v//ve+aOq1oeCy7jMV2qzzAlpsNuqpqCBjjriM1lbtZbF/Q8jVyA==}
     dev: true
 
   /sass/1.60.0:
