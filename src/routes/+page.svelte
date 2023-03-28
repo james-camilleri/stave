@@ -9,6 +9,8 @@
 
   import { subdivide } from '../lib/utils/svg'
 
+  import { darkMode } from './config'
+
   const WIDTH = 500
   const HEIGHT = 350
   const BAR_WIDTH = 1
@@ -21,7 +23,6 @@
   const BOTTOM_BAR_Y = HEIGHT - TOP_BAR_Y
   const BAR_SPACING = (BOTTOM_BAR_Y - TOP_BAR_Y) / 4
   const BAR_SUBDIVISIONS = 15
-  const DARK = true
 
   const MOCK_VOICE_DATA: VoiceGroupData[] = [
     // Soprano
@@ -83,8 +84,8 @@
   viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
   width={WIDTH}
   height={HEIGHT}
-  style:--foreground={DARK ? 'var(--light)' : 'var(--dark)'}
-  style:--background={DARK ? 'var(--dark)' : 'var(--light)'}
+  style:--foreground={$darkMode ? 'var(--light)' : 'var(--dark)'}
+  style:--background={$darkMode ? 'var(--dark)' : 'var(--light)'}
 >
   {#each bands as perimeter}
     <Band {perimeter} subdivisions={BAR_SUBDIVISIONS} />
