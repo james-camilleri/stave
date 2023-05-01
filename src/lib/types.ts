@@ -4,9 +4,11 @@ export interface Point {
 }
 
 export interface VoiceGroupData {
+  type: 'bass' | 'tenor' | 'alto' | 'soprano'
   highestFrequency: number
   lowestFrequency: number
   activeTime: number
+  uniqueNotes: Set<string>
 }
 
 export interface TrackingBar {

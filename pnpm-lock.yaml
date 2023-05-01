@@ -11,6 +11,7 @@ specifiers:
   eslint-config-prettier: ^8.5.0
   eslint-plugin-import: ^2.27.5
   eslint-plugin-svelte3: ^4.0.0
+  pitchy: ^4.0.7
   postcss: ^8.4.21
   postcss-html: ^1.5.0
   prettier: ^2.8.0
@@ -41,6 +42,7 @@ devDependencies:
   eslint-config-prettier: 8.8.0_eslint@8.36.0
   eslint-plugin-import: 2.27.5_cnkxirszkzb4o6ts7gbclno24e
   eslint-plugin-svelte3: 4.0.0_wzem237sbvnwe7n34ytc5phasy
+  pitchy: 4.0.7
   postcss: 8.4.21
   postcss-html: 1.5.0
   prettier: 2.8.7
@@ -1451,6 +1453,10 @@ packages:
       reusify: 1.0.4
     dev: true
 
+  /fft.js/4.0.4:
+    resolution: {integrity: sha512-f9c00hphOgeQTlDyavwTtu6RiK8AIFjD6+jvXkNkpeQ7rirK3uFWVpalkoS4LAwbdX7mfZ8aoBfFVQX1Re/8aw==}
+    dev: true
+
   /file-entry-cache/6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -2314,6 +2320,12 @@ packages:
   /picomatch/2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
     engines: {node: '>=8.6'}
+    dev: true
+
+  /pitchy/4.0.7:
+    resolution: {integrity: sha512-AEMDKxw+o8eeLK432cJniBJLgQ+KgGb0QFFHMA+3v2wAqeYesVyoPSJqaezNZXdJnN+7nK+i8qVR/aQp/NLxiA==}
+    dependencies:
+      fft.js: 4.0.4
     dev: true
 
   /postcss-html/1.5.0:
