@@ -8,6 +8,10 @@ export function pointsToString(points: Point[]) {
   return points.map(pointToString).join(' ')
 }
 
+export function pointsToPath(points: Point[]) {
+  return `M${points.map(pointToString).join(' L')}`
+}
+
 export function subdivide(points: Point[], noOfSubdivisions: number): Point[]
 export function subdivide(points: Point[][], noOfSubdivisions: number): Point[][]
 export function subdivide(points: Point[] | Point[][], noOfSubdivisions: number): Point[] | Point[][] {
