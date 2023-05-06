@@ -12,10 +12,12 @@
   import tenor from '$lib/audio/tenor.mp3'
   import Band from '$lib/components/Band.svelte'
   import BarLines from '$lib/components/BarLines.svelte'
+  import Polygon from '$lib/components/Polygon.svelte'
   import Polyline from '$lib/components/Polyline.svelte'
+  import SopranoShape from '$lib/components/SopranoShape.svelte'
   import { generateBarWarpPoints, groupBandPoints } from '$lib/utils/audio-processing'
 
-  import { subdivide } from '../lib/utils/svg'
+  import { midPoint, subdivide } from '../lib/utils/svg'
 
   import { darkMode } from './config'
 
@@ -120,7 +122,7 @@
       lowestFrequency: 110.01306271534635,
       activeTime: 274,
       uniqueNotes: {
-        size: 281,
+        size: 82,
       },
     },
     {
@@ -129,7 +131,7 @@
       lowestFrequency: 146.782990681331,
       activeTime: 534,
       uniqueNotes: {
-        size: 555,
+        size: 84,
       },
     },
     {
@@ -138,7 +140,7 @@
       lowestFrequency: 108.32927221336992,
       activeTime: 526,
       uniqueNotes: {
-        size: 540,
+        size: 132,
       },
     },
     {
@@ -147,7 +149,7 @@
       lowestFrequency: 127.11953908959727,
       activeTime: 389,
       uniqueNotes: {
-        size: 397,
+        size: 146,
       },
     },
   ]
@@ -178,6 +180,7 @@
     },
     MAX_BAND_HEIGHT
   )
+  // $: console.log(voiceData)
 
   $: bands = groupBandPoints(barStartPoints, offsetPoints, barEndPoints)
 </script>
@@ -192,6 +195,14 @@
   {#each bands as perimeter}
     <Band {perimeter} subdivisions={BAR_SUBDIVISIONS} />
   {/each}
+
+  <SopranoShape
+    top={offsetPoints[1][0]}
+    bottom={offsetPoints[1][1]}
+    bandStart={midPoint(barStartPoints[1], barStartPoints[2])}
+    bandEnd={midPoint(barEndPoints[1], barEndPoints[2])}
+    notes={voiceData[3].uniqueNotes.size}
+  />
 
   <BarLines startX={START_X} endX={END_X} startY={TOP_BAR_Y - 10} endY={BOTTOM_BAR_Y + 10} width={END_WIDTH} />
 

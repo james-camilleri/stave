@@ -5,10 +5,14 @@ export function generateBarWarpPoints(
   boundingBox: { startX: number; endX: number; startY: number; endY: number },
   offsetHeight: number
 ): Point[][] {
-  const { greatestActiveTime, maxFrequencyRange } = voiceData.reduce(
+  const { leastActiveTime, greatestActiveTime, maxFrequencyRange } = voiceData.reduce(
     (mergedData, voiceGroup) => {
       if (voiceGroup.activeTime > mergedData.greatestActiveTime) {
         mergedData.greatestActiveTime = voiceGroup.activeTime
+      }
+
+      if (voiceGroup.activeTime < mergedData.leastActiveTime) {
+        mergedData.leastActiveTime = voiceGroup.activeTime
       }
 
       const voiceGroupRange = voiceGroup.highestFrequency - voiceGroup.lowestFrequency
@@ -18,24 +22,32 @@ export function generateBarWarpPoints(
 
       return mergedData
     },
-    { greatestActiveTime: 0, maxFrequencyRange: 0 }
+    { leastActiveTime: Number.POSITIVE_INFINITY, greatestActiveTime: 0, maxFrequencyRange: 0 }
   )
 
   const trackerBars = voiceData.map((voiceGroup) => ({
     height: (voiceGroup.highestFrequency - voiceGroup.lowestFrequency) / maxFrequencyRange,
-    position: voiceGroup.activeTime / greatestActiveTime,
+    position: (voiceGroup.activeTime - leastActiveTime) / (greatestActiveTime - leastActiveTime),
   }))
+
+  // Sort bars for the most balanced image - shortest, largest, second-shortest, second-largest.
+  const sortedTrackerBars = trackerBars.sort((barA, barB) => barB.height - barA.height)
+  const positionedTrackerBars = [sortedTrackerBars[3], sortedTrackerBars[0], sortedTrackerBars[2], sortedTrackerBars[1]]
 
   const { startX, endX, startY, endY } = boundingBox
   const spaceBetweenBars = (endY - startY) / 4
 
-  return trackerBars.map((bar, i) => [
+  const trackerBarPadding = (endX - startX) / 5
+  const trackerBarStart = startX + trackerBarPadding
+  const trackerBarEnd = endX - trackerBarPadding
+
+  return positionedTrackerBars.map((bar, i) => [
     {
-      x: (startX + (endX - startX) * bar.position) / 2,
+      x: trackerBarStart + (trackerBarEnd - trackerBarStart) * bar.position,
       y: startY + spaceBetweenBars / 2 + spaceBetweenBars * i - (offsetHeight * bar.height) / 2,
     },
     {
-      x: (startX + (endX - startX) * bar.position) / 2,
+      x: trackerBarStart + (trackerBarEnd - trackerBarStart) * bar.position,
       y: startY + spaceBetweenBars / 2 + spaceBetweenBars * i + (offsetHeight * bar.height) / 2,
     },
   ])

@@ -47,3 +47,53 @@ export function subdivide(points: Point[] | Point[][], noOfSubdivisions: number)
 function isDeepList(points: Point[] | Point[][]): points is Point[][] {
   return Array.isArray(points[0])
 }
+
+export function degreesToRadians(degrees: number) {
+  return (degrees * Math.PI) / 180
+}
+
+export function translate(x: number, y: number) {
+  return `translate(${x}px, ${y}px)`
+}
+
+export function translatePoint(point: Point, vector: Point) {
+  return {
+    x: point.x + vector.x,
+    y: point.y + vector.y,
+  }
+}
+
+export function rotate(amount: number, point?: Point) {
+  if (!point) {
+    point = { x: 0, y: 0 }
+  }
+
+  return `translate(${point.x}px, ${point.y}px) rotate(${amount}deg) translate(-${point.x}px, -${point.y}px)`
+}
+
+export function rotatePoint(point: Point, origin: Point, angle: number) {
+  const angleInRadians = degreesToRadians(angle)
+  const sin = Math.sin(angleInRadians)
+  const cos = Math.cos(angleInRadians)
+
+  // Translate point to origin
+  const xTranslated = point.x - origin.x
+  const yTranslated = point.y - origin.y
+
+  // Rotate
+  const xRotated = xTranslated * cos - yTranslated * sin
+  const yRotated = xTranslated * sin + yTranslated * cos
+
+  // Translate back and return
+  return {
+    x: xRotated + origin.x,
+    y: yRotated + origin.y,
+  }
+}
+
+export function midPoint(pointA: Point, pointB: Point) {
+  return {
+    x: pointA.x + (pointB.x - pointA.x) / 2,
+    y: pointA.y + (pointB.y - pointA.y) / 2,
+  }
+}
