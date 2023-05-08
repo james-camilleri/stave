@@ -12,21 +12,27 @@
   import tenor from '$lib/audio/tenor.mp3'
   import Band from '$lib/components/Band.svelte'
   import BarLines from '$lib/components/BarLines.svelte'
-  import Polygon from '$lib/components/Polygon.svelte'
+  import BassShape from '$lib/components/BassShape.svelte'
   import Polyline from '$lib/components/Polyline.svelte'
   import SopranoShape from '$lib/components/SopranoShape.svelte'
   import { generateBarWarpPoints, groupBandPoints } from '$lib/utils/audio-processing'
 
   import { midPoint, subdivide } from '../lib/utils/svg'
 
-  import { darkMode } from './config'
-
-  /////////////////////////////////////////////////////////////////////////////
+  import { darkMode, playing } from './config'
 
   let altoPlayer: HTMLAudioElement
   let bassPlayer: HTMLAudioElement
   let tenorPlayer: HTMLAudioElement
   let sopranoPlayer: HTMLAudioElement
+
+  async function play() {
+    await Promise.all([bassPlayer.play(), tenorPlayer.play(), altoPlayer.play(), sopranoPlayer.play()])
+  }
+
+  $: if ($playing) {
+    void play()
+  }
 
   let voiceData: VoiceGroupData[] = [
     {
@@ -95,8 +101,6 @@
         }
       })
     }, 200)
-
-    await Promise.all([bassPlayer.play(), tenorPlayer.play(), altoPlayer.play(), sopranoPlayer.play()])
   })
 
   /////////////////////////////////////////////////////////////////////////////
@@ -196,6 +200,13 @@
     <Band {perimeter} subdivisions={BAR_SUBDIVISIONS} />
   {/each}
 
+  <BassShape
+    top={offsetPoints[0][0]}
+    bottom={offsetPoints[0][1]}
+    bandStart={midPoint(barStartPoints[0], barStartPoints[1])}
+    bandEnd={midPoint(barEndPoints[0], barEndPoints[1])}
+    notes={voiceData[0].uniqueNotes.size}
+  />
   <SopranoShape
     top={offsetPoints[1][0]}
     bottom={offsetPoints[1][1]}

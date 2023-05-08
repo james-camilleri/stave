@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Point } from '$lib/types'
 
+  import { fibonacci } from '$lib/utils/sequence'
   import { rotatePoint, translatePoint } from '$lib/utils/svg'
 
   import Polygon from './Polygon.svelte'
@@ -25,13 +26,6 @@
   const SIZE_SCALE_FACTOR = 1.2
   const ROTATION_SCALE_FACTOR = 15
   const FIBONACCI = fibonacci()
-
-  function fibonacci() {
-    return new Array(15).fill(1).reduce<number[]>((sequence, _, i) => {
-      sequence.push(i <= 1 ? i : sequence[i - 2] + sequence[i - 1])
-      return sequence
-    }, [])
-  }
 
   function generateShards(notes: number, midpoint: Point): Shard[] {
     const sizes = fibonacci().slice(1)

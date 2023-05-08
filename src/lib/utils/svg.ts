@@ -97,3 +97,13 @@ export function midPoint(pointA: Point, pointB: Point) {
     y: pointA.y + (pointB.y - pointA.y) / 2,
   }
 }
+
+export function box(midpoint: Point, width: number, height: number) {
+  return [
+    { x: midpoint.x - width / 2, y: midpoint.y - height / 2 },
+    { x: midpoint.x + width / 2, y: midpoint.y - height / 2 },
+    { x: midpoint.x + width / 2, y: midpoint.y + height / 2 },
+    { x: midpoint.x - width / 2, y: midpoint.y + height / 2 },
+    { x: midpoint.x - width / 2, y: midpoint.y - height / 2 },
+  ]
+}
