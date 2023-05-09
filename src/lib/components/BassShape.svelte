@@ -2,7 +2,7 @@
   import type { Point } from '$lib/types'
 
   import { fibonacci } from '$lib/utils/sequence'
-  import { box, midPoint, rotatePoint, translatePoint } from '$lib/utils/svg'
+  import { square, midpoint as midPoint, rotatePoint, translatePoint } from '$lib/utils/svg'
 
   import Polygon from './Polygon.svelte'
 
@@ -36,7 +36,7 @@
       const size = nextSize * SIZE_SCALE_FACTOR
       boxes.push({
         size,
-        points: box(midpoint, size, size),
+        points: square(midpoint, size, size),
       })
       nextSize = sizes.shift()
     }
