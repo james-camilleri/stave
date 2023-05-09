@@ -3,6 +3,11 @@ export interface Point {
   y: number
 }
 
+export interface Circle {
+  centre: Point
+  radius: number
+}
+
 export interface VoiceGroupData {
   type: 'bass' | 'tenor' | 'alto' | 'soprano'
   highestFrequency: number

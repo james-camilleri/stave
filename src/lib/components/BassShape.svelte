@@ -97,7 +97,7 @@
   {/each} -->
 
 {#each compoundSquares as compoundSquare}
-  <Path points={compoundSquare.map(({ points }) => points)} colour="#FC9403" width={0.8} />
+  <Path points={compoundSquare.map(({ points }) => points)} colour="#FC9403" width={0} close />
 {/each}
 
 <!-- {#each compoundSquares as compoundSquare}

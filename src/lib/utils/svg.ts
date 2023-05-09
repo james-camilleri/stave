@@ -8,8 +8,13 @@ export function pointsToString(points: Point[]) {
   return points.map(pointToString).join(' ')
 }
 
-export function pointsToPath(points: Point[]) {
-  return `M${points.map(pointToString).join(' L')}`
+export function pointsToPath(points: Point[], close = false) {
+  return `M${points.map(pointToString).join(' L')} ${close ? 'Z' : ''}`
+}
+
+export function circleToPath(centre: Point, radius: number) {
+  const { x, y } = centre
+  return `M ${x - radius},${y} a ${radius},${radius} 0 1,0 ${radius * 2},0 a ${radius},${radius} 0 1,0 ${-radius * 2},0`
 }
 
 export function subdivide(points: Point[], noOfSubdivisions: number): Point[]
@@ -98,22 +103,20 @@ export function midpoint(pointA: Point, pointB: Point) {
   }
 }
 
-export function square(midpoint: Point, width: number, height: number) {
+export function square(centre: Point, width: number, height: number) {
   return [
-    { x: midpoint.x - width / 2, y: midpoint.y - height / 2 },
-    { x: midpoint.x + width / 2, y: midpoint.y - height / 2 },
-    { x: midpoint.x + width / 2, y: midpoint.y + height / 2 },
-    { x: midpoint.x - width / 2, y: midpoint.y + height / 2 },
-    { x: midpoint.x - width / 2, y: midpoint.y - height / 2 },
+    { x: centre.x - width / 2, y: centre.y - height / 2 },
+    { x: centre.x + width / 2, y: centre.y - height / 2 },
+    { x: centre.x + width / 2, y: centre.y + height / 2 },
+    { x: centre.x - width / 2, y: centre.y + height / 2 },
   ]
 }
 
-export function triangle(midpoint: Point, height: number) {
+export function triangle(centre: Point, height: number) {
   const centreToPoint = -height / 3
   return [
-    translatePoint(midpoint, { x: 0, y: centreToPoint }),
-    rotatePoint(translatePoint(midpoint, { x: 0, y: centreToPoint }), midpoint, 120),
-    rotatePoint(translatePoint(midpoint, { x: 0, y: centreToPoint }), midpoint, 240),
-    translatePoint(midpoint, { x: 0, y: centreToPoint }),
+    translatePoint(centre, { x: 0, y: centreToPoint }),
+    rotatePoint(translatePoint(centre, { x: 0, y: centreToPoint }), centre, 120),
+    rotatePoint(translatePoint(centre, { x: 0, y: centreToPoint }), centre, 240),
   ]
 }
