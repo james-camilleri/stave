@@ -15,9 +15,10 @@
   import BassShape from '$lib/components/BassShape.svelte'
   import Polyline from '$lib/components/Polyline.svelte'
   import SopranoShape from '$lib/components/SopranoShape.svelte'
+  import TenorShape from '$lib/components/TenorShape.svelte'
   import { generateBarWarpPoints, groupBandPoints } from '$lib/utils/audio-processing'
 
-  import { midPoint, subdivide } from '../lib/utils/svg'
+  import { midpoint, subdivide } from '../lib/utils/svg'
 
   import { darkMode, playing } from './config'
 
@@ -203,15 +204,22 @@
   <BassShape
     top={offsetPoints[0][0]}
     bottom={offsetPoints[0][1]}
-    bandStart={midPoint(barStartPoints[0], barStartPoints[1])}
-    bandEnd={midPoint(barEndPoints[0], barEndPoints[1])}
+    bandStart={midpoint(barStartPoints[0], barStartPoints[1])}
+    bandEnd={midpoint(barEndPoints[0], barEndPoints[1])}
     notes={voiceData[0].uniqueNotes.size}
+  />
+  <TenorShape
+    top={offsetPoints[2][0]}
+    bottom={offsetPoints[2][1]}
+    bandStart={midpoint(barStartPoints[2], barStartPoints[3])}
+    bandEnd={midpoint(barEndPoints[2], barEndPoints[3])}
+    notes={voiceData[1].uniqueNotes.size}
   />
   <SopranoShape
     top={offsetPoints[1][0]}
     bottom={offsetPoints[1][1]}
-    bandStart={midPoint(barStartPoints[1], barStartPoints[2])}
-    bandEnd={midPoint(barEndPoints[1], barEndPoints[2])}
+    bandStart={midpoint(barStartPoints[1], barStartPoints[2])}
+    bandEnd={midpoint(barEndPoints[1], barEndPoints[2])}
     notes={voiceData[3].uniqueNotes.size}
   />
 

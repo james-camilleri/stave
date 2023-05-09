@@ -91,19 +91,29 @@ export function rotatePoint(point: Point, origin: Point, angle: number) {
   }
 }
 
-export function midPoint(pointA: Point, pointB: Point) {
+export function midpoint(pointA: Point, pointB: Point) {
   return {
     x: pointA.x + (pointB.x - pointA.x) / 2,
     y: pointA.y + (pointB.y - pointA.y) / 2,
   }
 }
 
-export function box(midpoint: Point, width: number, height: number) {
+export function square(midpoint: Point, width: number, height: number) {
   return [
     { x: midpoint.x - width / 2, y: midpoint.y - height / 2 },
     { x: midpoint.x + width / 2, y: midpoint.y - height / 2 },
     { x: midpoint.x + width / 2, y: midpoint.y + height / 2 },
     { x: midpoint.x - width / 2, y: midpoint.y + height / 2 },
     { x: midpoint.x - width / 2, y: midpoint.y - height / 2 },
+  ]
+}
+
+export function triangle(midpoint: Point, height: number) {
+  const centreToPoint = -height / 3
+  return [
+    translatePoint(midpoint, { x: 0, y: centreToPoint }),
+    rotatePoint(translatePoint(midpoint, { x: 0, y: centreToPoint }), midpoint, 120),
+    rotatePoint(translatePoint(midpoint, { x: 0, y: centreToPoint }), midpoint, 240),
+    translatePoint(midpoint, { x: 0, y: centreToPoint }),
   ]
 }
