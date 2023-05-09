@@ -4,7 +4,7 @@
   import { fibonacci } from '$lib/utils/sequence'
   import { square, midpoint as midPoint, rotatePoint, translatePoint } from '$lib/utils/svg'
 
-  import Polygon from './Polygon.svelte'
+  import Path from './Path.svelte'
 
   export let top: Point
   export let bottom: Point
@@ -85,10 +85,10 @@
 
 {#each compoundSquares as compoundSquare}
   {#each compoundSquare as { points }}
-    <Polygon points={[bandStart, points[0]]} colour="#FAB13C" width={0.5} fill={false} />
-    <Polygon points={[bandStart, points[3]]} colour="#FAB13C" width={0.5} fill={false} />
-    <Polygon points={[points[1], bandEnd]} colour="#FAB13C" width={0.5} fill={false} />
-    <Polygon points={[points[2], bandEnd]} colour="#FAB13C" width={0.5} fill={false} />
+    <Path points={[bandStart, points[0]]} colour="#FAB13C" width={0.5} fill={false} />
+    <Path points={[bandStart, points[3]]} colour="#FAB13C" width={0.5} fill={false} />
+    <Path points={[points[1], bandEnd]} colour="#FAB13C" width={0.5} fill={false} />
+    <Path points={[points[2], bandEnd]} colour="#FAB13C" width={0.5} fill={false} />
   {/each}
 {/each}
 
@@ -97,7 +97,7 @@
   {/each} -->
 
 {#each compoundSquares as compoundSquare}
-  <Polygon points={compoundSquare.map(({ points }) => points)} colour="#FC9403" width={0.8} />
+  <Path points={compoundSquare.map(({ points }) => points)} colour="#FC9403" width={0.8} />
 {/each}
 
 <!-- {#each compoundSquares as compoundSquare}

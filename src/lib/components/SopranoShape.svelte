@@ -4,7 +4,7 @@
   import { fibonacci } from '$lib/utils/sequence'
   import { rotatePoint, translatePoint } from '$lib/utils/svg'
 
-  import Polygon from './Polygon.svelte'
+  import Path from './Path.svelte'
 
   export let top: Point
   export let bottom: Point
@@ -96,20 +96,20 @@
 
 {#each shards as { top }}
   {#each shards as point}
-    <Polygon points={[bandStart, top]} colour="#FF91C2" width={0.5} fill={false} />
-    <Polygon points={[top, point.top]} colour="#FF91C2" width={0.3} fill={false} />
-    <Polygon points={[point.top, bandEnd]} colour="#FF91C2" width={0.5} fill={false} />
+    <Path points={[bandStart, top]} colour="#FF91C2" width={0.5} fill={false} />
+    <Path points={[top, point.top]} colour="#FF91C2" width={0.3} fill={false} />
+    <Path points={[point.top, bandEnd]} colour="#FF91C2" width={0.5} fill={false} />
   {/each}
 {/each}
 
 {#each shards as { bottom }}
   {#each shards as point}
-    <Polygon points={[bandStart, bottom]} colour="#FF91C2" width={0.5} fill={false} />
-    <Polygon points={[bottom, point.bottom]} colour="#FF91C2" width={0.3} fill={false} />
-    <Polygon points={[point.bottom, bandEnd]} colour="#FF91C2" width={0.5} fill={false} />
+    <Path points={[bandStart, bottom]} colour="#FF91C2" width={0.5} fill={false} />
+    <Path points={[bottom, point.bottom]} colour="#FF91C2" width={0.3} fill={false} />
+    <Path points={[point.bottom, bandEnd]} colour="#FF91C2" width={0.5} fill={false} />
   {/each}
 {/each}
 
 {#each shards as line}
-  <Polygon points={[line.top, line.right, line.bottom, line.left, line.top]} colour="#DE639A" />
+  <Path points={[line.top, line.right, line.bottom, line.left, line.top]} colour="#DE639A" />
 {/each}

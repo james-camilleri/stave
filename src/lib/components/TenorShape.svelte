@@ -4,7 +4,7 @@
   import { fibonacci } from '$lib/utils/sequence'
   import { midpoint as midPoint, rotatePoint, translatePoint, triangle } from '$lib/utils/svg'
 
-  import Polygon from './Polygon.svelte'
+  import Path from './Path.svelte'
 
   export let top: Point
   export let bottom: Point
@@ -82,8 +82,8 @@
 {#each compoundTriangles as compoundTriangle}
   {#each compoundTriangle as { points }}
     {#each points as point}
-      <Polygon points={[bandStart, point]} colour="#71ebc4" width={0.5} fill={false} />
-      <Polygon points={[point, bandEnd]} colour="#71ebc4" width={0.5} fill={false} />
+      <Path points={[bandStart, point]} colour="#71ebc4" width={0.5} fill={false} />
+      <Path points={[point, bandEnd]} colour="#71ebc4" width={0.5} fill={false} />
     {/each}
   {/each}
 {/each}
@@ -93,7 +93,7 @@
   {/each} -->
 
 {#each compoundTriangles as compoundTriangle}
-  <Polygon points={compoundTriangle.map(({ points }) => points)} colour="#11A677" width={0.8} />
+  <Path points={compoundTriangle.map(({ points }) => points)} colour="#11A677" width={0.8} />
 {/each}
 
 <!-- {#each compoundSquares as compoundSquare}
