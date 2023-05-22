@@ -3,8 +3,8 @@
 
   import { pointToString, pointsToPath } from '$lib/utils/svg'
 
-  export let points: Point[] | Point[][]
-  export let path: string
+  export let points: Point[] | Point[][] = []
+  export let path = ''
   export let colour = 'none'
   export let width = 1
   export let fill = true
@@ -17,9 +17,10 @@
   let d: string
   $: {
     const pointString =
-      path || isNested(points)
+      path ||
+      (isNested(points)
         ? points.map((points) => `M ${pointToString(points[0])} ${pointsToPath(points, close)}`).join(' ')
-        : pointsToPath(points, close)
+        : pointsToPath(points, close))
 
     d = `path("${pointString}")`
   }
