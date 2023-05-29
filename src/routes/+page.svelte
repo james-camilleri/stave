@@ -29,6 +29,42 @@
   let sopranoPlayer: HTMLAudioElement
 
   async function play() {
+    const audioContext = new AudioContext()
+    const analyserNodes = [
+      audioContext.createAnalyser(),
+      audioContext.createAnalyser(),
+      audioContext.createAnalyser(),
+      audioContext.createAnalyser(),
+    ]
+
+    const bassTrack = audioContext.createMediaElementSource(bassPlayer).connect(analyserNodes[0])
+    const tenorTrack = audioContext.createMediaElementSource(tenorPlayer).connect(analyserNodes[1])
+    const altoTrack = audioContext.createMediaElementSource(altoPlayer).connect(analyserNodes[2])
+    const sopranoTrack = audioContext.createMediaElementSource(sopranoPlayer).connect(analyserNodes[3])
+
+    altoTrack.connect(audioContext.destination)
+    bassTrack.connect(audioContext.destination)
+    tenorTrack.connect(audioContext.destination)
+    sopranoTrack.connect(audioContext.destination)
+
+    const detectors = analyserNodes.map((node) => PitchDetector.forFloat32Array(node.fftSize))
+    const inputs = detectors.map((detector) => new Float32Array(detector.inputLength))
+
+    window.setInterval(() => {
+      analyserNodes.forEach((analyserNode, i) => {
+        analyserNode.getFloatTimeDomainData(inputs[i])
+        const [pitch, clarity] = detectors[i].findPitch(inputs[i], audioContext.sampleRate)
+
+        // Filter out sounds below 100Hz, they're probably some kind of bug.
+        if (clarity > 0.95 && pitch > 100) {
+          voiceData[i].highestFrequency = Math.max(voiceData[i].highestFrequency, pitch)
+          voiceData[i].lowestFrequency = Math.min(voiceData[i].lowestFrequency, pitch)
+          voiceData[i].activeTime += 1
+          voiceData[i].uniqueNotes.add(pitch.toFixed(0))
+        }
+      })
+    }, 200)
+
     await Promise.all([bassPlayer.play(), tenorPlayer.play(), altoPlayer.play(), sopranoPlayer.play()])
   }
 
@@ -66,44 +102,6 @@
       uniqueNotes: new Set<string>(),
     },
   ]
-
-  onMount(async () => {
-    const audioContext = new AudioContext()
-    const analyserNodes = [
-      audioContext.createAnalyser(),
-      audioContext.createAnalyser(),
-      audioContext.createAnalyser(),
-      audioContext.createAnalyser(),
-    ]
-
-    const bassTrack = audioContext.createMediaElementSource(bassPlayer).connect(analyserNodes[0])
-    const tenorTrack = audioContext.createMediaElementSource(tenorPlayer).connect(analyserNodes[1])
-    const altoTrack = audioContext.createMediaElementSource(altoPlayer).connect(analyserNodes[2])
-    const sopranoTrack = audioContext.createMediaElementSource(sopranoPlayer).connect(analyserNodes[3])
-
-    altoTrack.connect(audioContext.destination)
-    bassTrack.connect(audioContext.destination)
-    tenorTrack.connect(audioContext.destination)
-    sopranoTrack.connect(audioContext.destination)
-
-    const detectors = analyserNodes.map((node) => PitchDetector.forFloat32Array(node.fftSize))
-    const inputs = detectors.map((detector) => new Float32Array(detector.inputLength))
-
-    window.setInterval(() => {
-      analyserNodes.forEach((analyserNode, i) => {
-        analyserNode.getFloatTimeDomainData(inputs[i])
-        const [pitch, clarity] = detectors[i].findPitch(inputs[i], audioContext.sampleRate)
-
-        // Filter out sounds below 100Hz, they're probably some kind of bug.
-        if (clarity > 0.95 && pitch > 100) {
-          voiceData[i].highestFrequency = Math.max(voiceData[i].highestFrequency, pitch)
-          voiceData[i].lowestFrequency = Math.min(voiceData[i].lowestFrequency, pitch)
-          voiceData[i].activeTime += 1
-          voiceData[i].uniqueNotes.add(pitch.toFixed(0))
-        }
-      })
-    }, 200)
-  })
 
   /////////////////////////////////////////////////////////////////////////////
 
@@ -192,11 +190,14 @@
 </script>
 
 <svg
+  id="svg"
   viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
   width={WIDTH}
   height={HEIGHT}
   style:--foreground={$darkMode ? 'var(--light)' : 'var(--dark)'}
   style:--background={$darkMode ? 'var(--dark)' : 'var(--light)'}
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
 >
   {#each bands as perimeter}
     <Band {perimeter} subdivisions={BAR_SUBDIVISIONS} />
