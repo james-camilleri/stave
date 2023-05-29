@@ -41,7 +41,7 @@
       nextSize = sizes.shift()
     }
 
-    // Create sub-boxes.
+    // Create sub-triangles.
     const triangleList: Triangle[][] = []
     const clonedTriangles = [...triangles]
     for (let i = 1; i < buckets.length; i++) {
@@ -88,21 +88,6 @@
   {/each}
 {/each}
 
-<!-- {#each boxes as box}
-  <Polygon points={box.points} colour="#FC9403" width={Math.max(box.size * 0.05, 0.3)} fill={false} />
-  {/each} -->
-
 {#each compoundTriangles as compoundTriangle}
   <Path points={compoundTriangle.map(({ points }) => points)} colour="#11A677" width={0} close />
 {/each}
-
-<!-- {#each compoundSquares as compoundSquare}
-  {#each compoundSquare as square}
-    <Polygon points={square.points} colour="#FC9403" width={0.8} fill={false} />
-  {/each}
-{/each} -->
-
-<!--
-{#each boxes as line}
-  <Polygon points={[line.top, line.right, line.bottom, line.left, line.top]} colour="#DE639A" />
-{/each} -->

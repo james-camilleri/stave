@@ -176,8 +176,8 @@
   )
 
   $: offsetPoints = generateBarWarpPoints(
-    // voiceData,
-    MOCK_VOICE_DATA,
+    voiceData,
+    // MOCK_VOICE_DATA,
     {
       startX: START_X,
       endX: END_X,
@@ -207,28 +207,28 @@
     bottom={offsetPoints[0][1]}
     bandStart={midpoint(barStartPoints[0], barStartPoints[1])}
     bandEnd={midpoint(barEndPoints[0], barEndPoints[1])}
-    notes={MOCK_VOICE_DATA[0].uniqueNotes.size}
+    notes={voiceData[0].uniqueNotes.size}
   />
   <TenorShape
     top={offsetPoints[2][0]}
     bottom={offsetPoints[2][1]}
     bandStart={midpoint(barStartPoints[2], barStartPoints[3])}
     bandEnd={midpoint(barEndPoints[2], barEndPoints[3])}
-    notes={MOCK_VOICE_DATA[1].uniqueNotes.size}
+    notes={voiceData[1].uniqueNotes.size}
   />
   <SopranoShape
     top={offsetPoints[1][0]}
     bottom={offsetPoints[1][1]}
     bandStart={midpoint(barStartPoints[1], barStartPoints[2])}
     bandEnd={midpoint(barEndPoints[1], barEndPoints[2])}
-    notes={MOCK_VOICE_DATA[3].uniqueNotes.size}
+    notes={voiceData[3].uniqueNotes.size}
   />
   <AltoShape
     top={offsetPoints[3][0]}
     bottom={offsetPoints[3][1]}
     bandStart={midpoint(barStartPoints[3], barStartPoints[4])}
     bandEnd={midpoint(barEndPoints[3], barEndPoints[4])}
-    notes={MOCK_VOICE_DATA[2].uniqueNotes.size}
+    notes={voiceData[2].uniqueNotes.size}
   />
 
   <BarLines startX={START_X} endX={END_X} startY={TOP_BAR_Y - 10} endY={BOTTOM_BAR_Y + 10} width={END_WIDTH} />
