@@ -120,3 +120,7 @@ export function triangle(centre: Point, height: number) {
     rotatePoint(translatePoint(centre, { x: 0, y: centreToPoint }), centre, 240),
   ]
 }
+
+export function randomBetween(min: number, max: number) {
+  return Math.random() * (max - min) + min;
+}
