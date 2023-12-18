@@ -6,9 +6,13 @@
   export let points: Point[] | Point[][] = []
   export let path = ''
   export let colour = 'none'
+  export let stroke: string | undefined = undefined
   export let width = 1
   export let fill = true
   export let close = false
+
+  export let strokeOpacity = 1
+  export let fillOpacity = 1
 
   function isNested(points: Point[] | Point[][]): points is Point[][] {
     return Array.isArray(points[0])
@@ -29,8 +33,10 @@
 <path
   style:d
   fill={fill ? colour : 'none'}
-  stroke={colour}
+  fill-opacity={fillOpacity}
+  stroke={stroke ?? colour}
   stroke-width={width}
+  stroke-opacity={strokeOpacity}
   stroke-linejoin="round"
   fill-rule="evenodd"
 />
