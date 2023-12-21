@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { Point } from '$lib/types'
 
+  import { PATTERN_RANDOM_OFFSET } from '$lib/constants'
   import { fibonacci } from '$lib/utils/sequence'
-  import { midpoint as midPoint, rotatePoint, translatePoint, triangle } from '$lib/utils/svg'
+  import { midpoint as midPoint, randomBetween, rotatePoint, translatePoint, triangle } from '$lib/utils/svg'
 
   import Path from './Path.svelte'
 
+  export let colour: string
   export let top: Point
   export let bottom: Point
   export let bandStart: Point
@@ -68,7 +70,11 @@
       return compoundTriangle.map((triangle) => ({
         size: triangle.size,
         points: triangle.points.map((point) =>
-          rotatePoint(translatePoint(rotatePoint(point, midpoint, -angle), { x: previousSizes, y: 0 }), midpoint, angle)
+          rotatePoint(
+            translatePoint(rotatePoint(point, midpoint, -angle), { x: previousSizes, y: 0 }),
+            midpoint,
+            angle,
+          ),
         ),
       }))
     })
@@ -82,12 +88,18 @@
 {#each compoundTriangles as compoundTriangle}
   {#each compoundTriangle as { points }}
     {#each points as point}
-      <Path points={[bandStart, point]} colour="#71ebc4" width={0.5} fill={false} />
-      <Path points={[point, bandEnd]} colour="#71ebc4" width={0.5} fill={false} />
+      <Path
+        points={[
+          translatePoint(bandStart, { x: 0, y: randomBetween(-PATTERN_RANDOM_OFFSET, PATTERN_RANDOM_OFFSET) }),
+          point,
+          translatePoint(bandEnd, { x: 0, y: randomBetween(-PATTERN_RANDOM_OFFSET, PATTERN_RANDOM_OFFSET) }),
+        ]}
+        stroke={colour}
+        {colour}
+        fillOpacity={0.2}
+        width={0.5}
+        fill
+      />
     {/each}
   {/each}
-{/each}
-
-{#each compoundTriangles as compoundTriangle}
-  <Path points={compoundTriangle.map(({ points }) => points)} colour="#11A677" width={0} close />
 {/each}
