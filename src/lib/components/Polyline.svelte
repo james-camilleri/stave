@@ -4,7 +4,7 @@
   import { pointsToPath } from '../utils/svg'
 
   export let points: Point[]
-  export let colour = 'var(--foreground)'
+  export let colour: string
   export let width = 1
 </script>
 

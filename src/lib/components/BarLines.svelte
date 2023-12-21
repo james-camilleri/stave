@@ -6,6 +6,7 @@
   export let endX: number
   export let startY: number
   export let endY: number
+  export let colour: string
 </script>
 
 <Polyline
@@ -14,6 +15,7 @@
     { x: startX, y: endY },
   ]}
   {width}
+  {colour}
 />
 
 <Polyline
@@ -22,4 +24,5 @@
     { x: endX, y: endY },
   ]}
   {width}
+  {colour}
 />

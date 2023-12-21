@@ -1,11 +1,13 @@
 <script lang="ts">
   import type { Point } from '$lib/types'
 
+  import { COLOUR_SCHEMES } from '$lib/constants'
   import { subdivide } from '$lib/utils/svg'
 
   import Polyline from './Polyline.svelte'
 
   export let perimeter: Point[]
+  export let colour: string
   export let subdivisions = 0
 
   if (perimeter.length !== 8) {
@@ -35,8 +37,8 @@
 </script>
 
 {#each lines as points}
-  <Polyline {points} width={0.3} />
+  <Polyline {points} {colour} width={0.3} />
 {/each}
 
-<Polyline points={perimeter.slice(0, 4)} width={2} />
-<Polyline points={perimeter.slice(3, 8)} width={2} />
+<Polyline {colour} points={perimeter.slice(0, 4)} width={2} />
+<Polyline {colour} points={perimeter.slice(3, 8)} width={2} />
