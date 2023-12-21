@@ -4,7 +4,6 @@
   import type { VoiceGroupData } from '../lib/types'
 
   import { PitchDetector } from 'pitchy'
-  import { onMount } from 'svelte'
 
   import alto from '$lib/audio/alto.mp3'
   import bass from '$lib/audio/bass.mp3'
@@ -13,15 +12,16 @@
   import AltoShape from '$lib/components/AltoShape.svelte'
   import Band from '$lib/components/Band.svelte'
   import BarLines from '$lib/components/BarLines.svelte'
-  import BassShape from '$lib/components/BassShape.svelte'
   import Polyline from '$lib/components/Polyline.svelte'
-  import SopranoShape from '$lib/components/SopranoShape.svelte'
   import TenorShape from '$lib/components/TenorShape.svelte'
+  import { COLOUR_SCHEMES } from '$lib/constants'
   import { generateBarWarpPoints, groupBandPoints } from '$lib/utils/audio-processing'
 
   import { midpoint, subdivide } from '../lib/utils/svg'
 
   import { darkMode, playing } from './config'
+
+  $: colours = $darkMode ? COLOUR_SCHEMES.DARK : COLOUR_SCHEMES.LIGHT
 
   let altoPlayer: HTMLAudioElement
   let bassPlayer: HTMLAudioElement
@@ -163,14 +163,14 @@
       { x: START_X, y: TOP_BAR_Y },
       { x: START_X, y: BOTTOM_BAR_Y },
     ],
-    3
+    3,
   )
   const barEndPoints = subdivide(
     [
       { x: END_X, y: TOP_BAR_Y },
       { x: END_X, y: BOTTOM_BAR_Y },
     ],
-    3
+    3,
   )
 
   $: offsetPoints = generateBarWarpPoints(
@@ -182,7 +182,7 @@
       startY: TOP_BAR_Y,
       endY: BOTTOM_BAR_Y,
     },
-    MAX_BAND_HEIGHT
+    MAX_BAND_HEIGHT,
   )
   // $: console.log(voiceData)
 
@@ -194,21 +194,21 @@
   viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
   width={WIDTH}
   height={HEIGHT}
-  style:--foreground={$darkMode ? 'var(--light)' : 'var(--dark)'}
-  style:--background={$darkMode ? 'var(--dark)' : 'var(--light)'}
   xmlns="http://www.w3.org/2000/svg"
   xmlns:xlink="http://www.w3.org/1999/xlink"
+  style:background={colours.BACKGROUND}
 >
   {#each bands as perimeter}
-    <Band {perimeter} subdivisions={BAR_SUBDIVISIONS} />
+    <Band {perimeter} subdivisions={BAR_SUBDIVISIONS} colour={colours.FOREGROUND} />
   {/each}
 
-  <BassShape
+  <TenorShape
     top={offsetPoints[0][0]}
     bottom={offsetPoints[0][1]}
     bandStart={midpoint(barStartPoints[0], barStartPoints[1])}
     bandEnd={midpoint(barEndPoints[0], barEndPoints[1])}
     notes={voiceData[0].uniqueNotes.size}
+    colour={colours.COLOUR_1}
   />
   <TenorShape
     top={offsetPoints[2][0]}
@@ -216,23 +216,33 @@
     bandStart={midpoint(barStartPoints[2], barStartPoints[3])}
     bandEnd={midpoint(barEndPoints[2], barEndPoints[3])}
     notes={voiceData[1].uniqueNotes.size}
-  />
-  <SopranoShape
-    top={offsetPoints[1][0]}
-    bottom={offsetPoints[1][1]}
-    bandStart={midpoint(barStartPoints[1], barStartPoints[2])}
-    bandEnd={midpoint(barEndPoints[1], barEndPoints[2])}
-    notes={voiceData[3].uniqueNotes.size}
+    colour={colours.COLOUR_1}
   />
   <AltoShape
     top={offsetPoints[3][0]}
     bottom={offsetPoints[3][1]}
     bandStart={midpoint(barStartPoints[3], barStartPoints[4])}
     bandEnd={midpoint(barEndPoints[3], barEndPoints[4])}
+    colour={colours.COLOUR_2}
     notes={voiceData[2].uniqueNotes.size}
   />
+  <AltoShape
+    top={offsetPoints[1][0]}
+    bottom={offsetPoints[1][1]}
+    bandStart={midpoint(barStartPoints[1], barStartPoints[2])}
+    bandEnd={midpoint(barEndPoints[1], barEndPoints[2])}
+    notes={voiceData[3].uniqueNotes.size}
+    colour={colours.COLOUR_2}
+  />
 
-  <BarLines startX={START_X} endX={END_X} startY={TOP_BAR_Y - 10} endY={BOTTOM_BAR_Y + 10} width={END_WIDTH} />
+  <BarLines
+    startX={START_X}
+    endX={END_X}
+    startY={TOP_BAR_Y - 10}
+    endY={BOTTOM_BAR_Y + 10}
+    width={END_WIDTH}
+    colour={colours.FOREGROUND}
+  />
 
   {#if DEBUG}
     {#each offsetPoints as points}
@@ -248,12 +258,8 @@
 
 <style lang="scss">
   svg {
-    --dark: rgb(0 0 0);
-    --light: rgb(255 255 255);
-
     width: 100vw;
     height: 100vh;
     padding: 50px;
-    background: var(--background);
   }
 </style>

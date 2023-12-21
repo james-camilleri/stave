@@ -4,10 +4,14 @@
   import Play from '@fortawesome/fontawesome-free/svgs/solid/play.svg'
   import Sun from '@fortawesome/fontawesome-free/svgs/solid/sun.svg'
 
+  import { COLOUR_SCHEMES } from '$lib/constants'
+
   import { darkMode, playing } from './config'
 
   let link: HTMLAnchorElement
   let downloads = 0
+
+  $: colours = $darkMode ? COLOUR_SCHEMES.DARK : COLOUR_SCHEMES.LIGHT
 
   function toggle() {
     $darkMode = !$darkMode
@@ -26,8 +30,6 @@
       .replaceAll('style="d: path(&quot;', 'd="')
       .replaceAll('&quot;);', '')
       .replaceAll(/class=".*?"/g, '')
-      .replaceAll(/var\(--foreground\)/g, '#000000')
-      .replaceAll(/var\(--background\)/g, '#ffffff')
 
     downloads++
     const blob = new Blob([svgText], { type: 'image/svg+xml' })
@@ -40,7 +42,7 @@
   }
 </script>
 
-<div class="dark-toggle icon" on:click={toggle} style:color={$darkMode ? 'rgb(255 255 255)' : 'rgb(0 0 0)'}>
+<div class="dark-toggle icon" on:click={toggle} style:color={colours.FOREGROUND}>
   {#if $darkMode}
     <Sun />
   {:else}
@@ -48,12 +50,12 @@
   {/if}
 </div>
 {#if !$playing}
-  <div class="play icon" on:click={play} style:color={$darkMode ? 'rgb(255 255 255)' : 'rgb(0 0 0)'}>
+  <div class="play icon" on:click={play} style:color={colours.FOREGROUND}>
     <Play />
   </div>
 {/if}
 <slot />
-<div class="download icon" on:click={download} style:color={$darkMode ? 'rgb(255 255 255)' : 'rgb(0 0 0)'}>
+<div class="download icon" on:click={download} style:color={colours.FOREGROUND}>
   <Download />
 </div>
 <a class="link" bind:this={link} />
