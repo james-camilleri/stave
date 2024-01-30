@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { Circle, Point } from '$lib/types'
 
+  import { PINK } from '$lib/constants'
   import { fibonacci } from '$lib/utils/sequence'
-  import { circleToPath, midpoint as midPoint, rotatePoint, translatePoint } from '$lib/utils/svg'
+  import { midpoint as midPoint, randomBetween, rotatePoint, translatePoint } from '$lib/utils/svg'
 
-  import Band from './Band.svelte'
   import Path from './Path.svelte'
 
   export let top: Point
@@ -73,30 +73,60 @@
   function getRotationOffset(i: number) {
     return FIBONACCI[i] * ROTATION_SCALE_FACTOR + 245 * i
   }
+
+  const RANDO = 3
 </script>
 
 {#each compoundCircles as compoundCircle}
   {#each compoundCircle as circle}
+    <!-- Rando -->
     <Path
-      points={[bandStart, translatePoint(circle.centre, { x: 0, y: circle.radius }), bandEnd]}
-      colour="#23b6ff"
+      points={[
+        translatePoint(bandStart, { x: 0, y: randomBetween(-RANDO, RANDO) }),
+        translatePoint(circle.centre, { x: 0, y: circle.radius }),
+        translatePoint(bandEnd, { x: 0, y: randomBetween(-RANDO, RANDO) }),
+      ]}
+      stroke={PINK}
+      colour={PINK}
+      fillOpacity={0.2}
       width={0.5}
-      fill={false}
+      fill
     />
     <Path
-      points={[bandStart, translatePoint(circle.centre, { x: 0, y: -circle.radius }), bandEnd]}
-      colour="#23b6ff"
+      points={[
+        translatePoint(bandStart, { x: 0, y: randomBetween(-RANDO, RANDO) }),
+        translatePoint(circle.centre, { x: 0, y: -circle.radius }),
+        translatePoint(bandEnd, { x: 0, y: randomBetween(-RANDO, RANDO) }),
+      ]}
+      stroke={PINK}
+      colour={PINK}
+      fillOpacity={0.2}
       width={0.5}
-      fill={false}
+      fill
     />
+
+    <!-- <Path
+      points={[
+        translatePoint(bandStart, { x: 0, y: randomBetween(-20, 20) }),
+        translatePoint(circle.centre, { x: 0, y: circle.radius }),
+        translatePoint(bandEnd, { x: 0, y: randomBetween(-20, 20) }),
+        translatePoint(bandEnd, { x: 0, y: randomBetween(-20, 20) }),
+        translatePoint(circle.centre, { x: 0, y: -circle.radius }),
+        translatePoint(bandStart, { x: 0, y: randomBetween(-20, 20) }),
+      ]}
+      stroke={PINK}
+      colour="rgb(0 0 0 / 30%)"
+      width={0.5}
+      fill
+    /> -->
   {/each}
 {/each}
-
+<!--
 {#each compoundCircles as compoundCircle}
   <Path
     path={compoundCircle.map((circle) => circleToPath(circle.centre, circle.radius)).join(' ')}
-    colour="#0fc7ff"
+    colour={PINK}
     width={0}
     close
   />
-{/each}
+{/each} -->

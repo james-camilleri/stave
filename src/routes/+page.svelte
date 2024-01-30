@@ -13,6 +13,7 @@
   import Band from '$lib/components/Band.svelte'
   import BarLines from '$lib/components/BarLines.svelte'
   import Polyline from '$lib/components/Polyline.svelte'
+  import SopranoShape from '$lib/components/SopranoShape.svelte'
   import TenorShape from '$lib/components/TenorShape.svelte'
   import { COLOUR_SCHEMES } from '$lib/constants'
   import { generateBarWarpPoints, groupBandPoints } from '$lib/utils/audio-processing'
@@ -27,6 +28,8 @@
   let bassPlayer: HTMLAudioElement
   let tenorPlayer: HTMLAudioElement
   let sopranoPlayer: HTMLAudioElement
+
+  const PLAY_SPEED = 1
 
   async function play() {
     const audioContext = new AudioContext()
@@ -63,7 +66,12 @@
           voiceData[i].uniqueNotes.add(pitch.toFixed(0))
         }
       })
-    }, 200)
+    }, 200 / PLAY_SPEED)
+
+    bassPlayer.playbackRate = PLAY_SPEED
+    tenorPlayer.playbackRate = PLAY_SPEED
+    altoPlayer.playbackRate = PLAY_SPEED
+    sopranoPlayer.playbackRate = PLAY_SPEED
 
     await Promise.all([bassPlayer.play(), tenorPlayer.play(), altoPlayer.play(), sopranoPlayer.play()])
   }
@@ -116,8 +124,10 @@
   const TOP_BAR_Y = MAX_BAND_HEIGHT / 2
   const BOTTOM_BAR_Y = HEIGHT - TOP_BAR_Y
   const BAR_SPACING = (BOTTOM_BAR_Y - TOP_BAR_Y) / 4
-  const BAR_SUBDIVISIONS = 15
+  const BAR_SUBDIVISIONS = 17
   const DEBUG = false
+
+  const ORDER = ['bass', 'soprano', 'alto', 'tenor']
 
   const MOCK_VOICE_DATA: VoiceGroupData[] = [
     {
@@ -175,7 +185,6 @@
 
   $: offsetPoints = generateBarWarpPoints(
     voiceData,
-    // MOCK_VOICE_DATA,
     {
       startX: START_X,
       endX: END_X,
@@ -184,7 +193,6 @@
     },
     MAX_BAND_HEIGHT,
   )
-  // $: console.log(voiceData)
 
   $: bands = groupBandPoints(barStartPoints, offsetPoints, barEndPoints)
 </script>
@@ -202,38 +210,20 @@
     <Band {perimeter} subdivisions={BAR_SUBDIVISIONS} colour={colours.FOREGROUND} />
   {/each}
 
-  <TenorShape
-    top={offsetPoints[0][0]}
-    bottom={offsetPoints[0][1]}
-    bandStart={midpoint(barStartPoints[0], barStartPoints[1])}
-    bandEnd={midpoint(barEndPoints[0], barEndPoints[1])}
-    notes={voiceData[0].uniqueNotes.size}
-    colour={colours.COLOUR_1}
-  />
-  <TenorShape
-    top={offsetPoints[2][0]}
-    bottom={offsetPoints[2][1]}
-    bandStart={midpoint(barStartPoints[2], barStartPoints[3])}
-    bandEnd={midpoint(barEndPoints[2], barEndPoints[3])}
-    notes={voiceData[1].uniqueNotes.size}
-    colour={colours.COLOUR_1}
-  />
-  <AltoShape
-    top={offsetPoints[3][0]}
-    bottom={offsetPoints[3][1]}
-    bandStart={midpoint(barStartPoints[3], barStartPoints[4])}
-    bandEnd={midpoint(barEndPoints[3], barEndPoints[4])}
-    colour={colours.COLOUR_2}
-    notes={voiceData[2].uniqueNotes.size}
-  />
-  <AltoShape
-    top={offsetPoints[1][0]}
-    bottom={offsetPoints[1][1]}
-    bandStart={midpoint(barStartPoints[1], barStartPoints[2])}
-    bandEnd={midpoint(barEndPoints[1], barEndPoints[2])}
-    notes={voiceData[3].uniqueNotes.size}
-    colour={colours.COLOUR_2}
-  />
+  <!-- Sort by unique notes to push larger shapes to the back -->
+  {#each voiceData.toSorted((a, b) => b.uniqueNotes.size - a.uniqueNotes.size) as voiceGroup, i}
+    {@const bar = ORDER.indexOf(voiceGroup.type)}
+
+    <SopranoShape
+      top={offsetPoints[bar][0]}
+      bottom={offsetPoints[bar][1]}
+      bandStart={midpoint(barStartPoints[bar], barStartPoints[bar + 1])}
+      bandEnd={midpoint(barEndPoints[bar], barEndPoints[bar + 1])}
+      notes={voiceGroup.uniqueNotes.size}
+      colour={bar % 2 === 0 ? colours.COLOUR_1 : colours.COLOUR_2}
+      baseOpacity={0.1 + (voiceData.length - i) * 0.05}
+    />
+  {/each}
 
   <BarLines
     startX={START_X}

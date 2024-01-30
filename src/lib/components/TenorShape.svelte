@@ -101,5 +101,6 @@
         fill
       />
     {/each}
+    <Path points={[points[0], points[1], points[2]]} stroke="#000" width={1} fill />
   {/each}
 {/each}

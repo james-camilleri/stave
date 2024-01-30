@@ -1,8 +1,11 @@
 <script lang="ts">
   import type { Point } from '$lib/types'
 
+  import Color from 'color'
+
+  import { FILL_OPACITY, PATTERN_RANDOM_OFFSET } from '$lib/constants'
   import { fibonacci } from '$lib/utils/sequence'
-  import { rotatePoint, translatePoint } from '$lib/utils/svg'
+  import { randomBetween, rotatePoint, translatePoint } from '$lib/utils/svg'
 
   import Path from './Path.svelte'
 
@@ -11,6 +14,8 @@
   export let bandStart: Point
   export let bandEnd: Point
   export let notes: number
+  export let colour: string
+  export let baseOpacity: number
 
   interface Shard {
     size: number
@@ -23,6 +28,7 @@
   $: midpoint = { x: top.x, y: top.y + (bottom.y - top.y) / 2 }
   $: shards = transformPoints(generateShards(notes, midpoint).reverse(), midpoint)
 
+  const MAX_SIZE = 50
   const SIZE_SCALE_FACTOR = 1.2
   const ROTATION_SCALE_FACTOR = 15
   const FIBONACCI = fibonacci()
@@ -35,7 +41,7 @@
 
     while (nextSize && notes >= nextSize) {
       notes -= nextSize
-      const size = nextSize * SIZE_SCALE_FACTOR
+      const size = Math.min(nextSize * SIZE_SCALE_FACTOR, MAX_SIZE)
       lines.push({
         size,
         top: { x: midpoint.x, y: midpoint.y - size },
@@ -60,22 +66,22 @@
         top: rotatePoint(
           translatePoint(rotatePoint(top, midpoint, -angle), { x: translationOffset, y: 0 }),
           midpoint,
-          angle
+          angle,
         ),
         right: rotatePoint(
           translatePoint(rotatePoint(right, midpoint, -angle), { x: translationOffset, y: 0 }),
           midpoint,
-          angle
+          angle,
         ),
         bottom: rotatePoint(
           translatePoint(rotatePoint(bottom, midpoint, -angle), { x: translationOffset, y: 0 }),
           midpoint,
-          angle
+          angle,
         ),
         left: rotatePoint(
           translatePoint(rotatePoint(left, midpoint, -angle), { x: translationOffset, y: 0 }),
           midpoint,
-          angle
+          angle,
         ),
       }
     })
@@ -94,22 +100,19 @@
   }
 </script>
 
-{#each shards as { top }}
-  {#each shards as point}
-    <Path points={[bandStart, top]} colour="#FF91C2" width={0.5} fill={false} />
-    <Path points={[top, point.top]} colour="#FF91C2" width={0.3} fill={false} />
-    <Path points={[point.top, bandEnd]} colour="#FF91C2" width={0.5} fill={false} />
-  {/each}
-{/each}
-
-{#each shards as { bottom }}
-  {#each shards as point}
-    <Path points={[bandStart, bottom]} colour="#FF91C2" width={0.5} fill={false} />
-    <Path points={[bottom, point.bottom]} colour="#FF91C2" width={0.3} fill={false} />
-    <Path points={[point.bottom, bandEnd]} colour="#FF91C2" width={0.5} fill={false} />
-  {/each}
-{/each}
-
-{#each shards as line}
-  <Path points={[line.top, line.right, line.bottom, line.left, line.top]} colour="#DE639A" />
+{#each shards as shard, i}
+  {@const start = translatePoint(bandStart, { x: 0, y: randomBetween(-PATTERN_RANDOM_OFFSET, PATTERN_RANDOM_OFFSET) })}
+  <Path
+    points={[
+      start,
+      shard.top,
+      translatePoint(bandEnd, { x: 0, y: randomBetween(-PATTERN_RANDOM_OFFSET, PATTERN_RANDOM_OFFSET) }),
+      shard.bottom,
+      start,
+    ]}
+    colour={new Color(colour).lighten(i / (shards.length * 4)).hex()}
+    fill
+    fillOpacity={baseOpacity + FILL_OPACITY}
+    width={0.5}
+  />
 {/each}
